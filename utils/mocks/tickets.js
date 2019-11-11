@@ -291,6 +291,22 @@ const ticketsMock = [
   }
 ];
 
+function filteredTicketsMock(tag) {
+  return ticketsMock.filter(ticket => ticket.tags.includes(tag));
+}
+
+class TicketsServiceMock {
+  async getTickets() {
+    return Promise.resolve(ticketsMock);
+  }
+
+  async createTicket() {
+    return Promise.resolve(ticketsMock[0]);
+  }
+}
+
 module.exports = {
-  ticketsMock
+  ticketsMock,
+  filteredTicketsMock,
+  TicketsServiceMock
 };

@@ -1,4 +1,5 @@
 const express = require('express');
+const passport = require('passport');
 const TicketsService = require('../services/tickets');
 const joi = require('@hapi/joi');
 
@@ -8,7 +9,11 @@ const {
   updateticketSchema
 } = require('../utils/schemas/tickets');
 
-const validationHandler = require('../utils/middleware/validationHandler')
+const validationHandler = require('../utils/middleware/validationHandler');
+const scopesValidationHandler = require('../utils/middleware/scopesValidationHandler');
+
+//JWT strategy
+require('../utils/auth/strategies/jwt');
 
 function ticketsApi(app) {
   const router = express.Router();
@@ -16,7 +21,10 @@ function ticketsApi(app) {
 
   const ticketsService = new TicketsService();
 
-  router.get('/', async function(req, res, next) {
+  router.get('/',
+    passport.authenticate('jwt', { session: false }),
+    scopesValidationHandler(['read:tickets']),
+    async function(req, res, next) {
     //con que lo voy a filtrar
     const { departing } = req.query;
     try {
@@ -33,6 +41,8 @@ function ticketsApi(app) {
 
   router.get(
     '/:ticketId',
+    passport.authenticate('jwt', { session: false }),
+    scopesValidationHandler(['read:tickets']),
     validationHandler(joi.object({ ticketId: ticketIdSchema }), 'params'), 
     async function(req, res, next) {
     const { ticketId } = req.params
@@ -49,7 +59,9 @@ function ticketsApi(app) {
   });
 
   router.post(
-    '/', 
+    '/',
+    passport.authenticate('jwt', { session: false }),
+    scopesValidationHandler(['create:tickets']),
     validationHandler(createticketSchema), 
     async function(req, res, next) {
     const { body: ticket } = req
@@ -67,6 +79,8 @@ function ticketsApi(app) {
 
   router.put(
     '/:ticketId',
+    passport.authenticate('jwt', { session: false }),
+    scopesValidationHandler(['update:tickets']),
     validationHandler(joi.object({ ticketId: ticketIdSchema }), 'params'), 
     validationHandler(updateticketSchema), 
     async function(req, res, next) {
@@ -86,6 +100,8 @@ function ticketsApi(app) {
 
   router.delete(
     '/:ticketId',
+    passport.authenticate('jwt', { session: false }),
+    scopesValidationHandler(['delete:tickets']),
     validationHandler(joi.object({ ticketId: ticketIdSchema }), 'params'),
     async function(req, res, next) {
     const { ticketId } = req.params;
