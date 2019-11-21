@@ -1,0 +1,17 @@
+{
+  "name": "easyticket",
+  "version": 2,
+  "builds": [{ "src": "index.js", "use": "@now/node" }],
+  "routes": [{ "src": "/(.*)", "dest": "index.js" }],
+  "env": {
+    "DB_USER": "@easyticket-db-user",
+    "DB_PASSWORD": "@easyticket-db-password",
+    "DB_HOST": "@easyticket-db-host",
+    "DB_NAME": "@easyticket-db-name",
+    "DEFAULT_ADMIN_PASSWORD": "@easyticket-default-admin-password",
+    "DEFAULT_USER_PASSWORD": "@easyticket-default-user-password",
+    "AUTH_JWT_SECRET": "@easyticket-auth-jwt-secret",
+    "PUBLIC_API_KEY_TOKEN":"@easyticket-public-api-key-token",
+    "ADMIN_API_KEY_TOKEN": "@easyticket-admin-api-key-token"
+  }
+}
